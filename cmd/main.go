@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -9,6 +10,7 @@ import (
 	"go-template/config"
 	"go-template/internal/rest"
 	"go-template/pkg/env"
+	"go-template/pkg/json"
 	"go-template/pkg/zlog"
 
 	"github.com/urfave/cli"
@@ -18,11 +20,17 @@ func main() {
 	app := cli.NewApp()
 	app.Name = env.AppName()
 	app.Usage = env.AppName() + " running"
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "config",
-			Usage: "配置文件",
-			Value: "",
+	app.Commands = []cli.Command{
+		{
+			Name:    "version",
+			Aliases: []string{"v"},
+			Usage:   "check version",
+			Action: func(c *cli.Context) error {
+				envInfo := env.CompileInfo()
+				s := json.ToJSONs(envInfo)
+				fmt.Println(s)
+				return nil
+			},
 		},
 	}
 	app.Action = func(c *cli.Context) {
