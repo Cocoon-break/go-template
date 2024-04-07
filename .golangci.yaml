@@ -1,0 +1,159 @@
+# Options for analysis running.
+run:
+  # Timeout for analysis, e.g. 30s, 5m.
+  # Default: 1m
+  timeout: 10m
+  # Include test files or not.
+  # Default: true
+  tests: true
+  # Which dirs to skip: issues from them won't be reported.
+  # Can use regexp here: `generated.*`, regexp is applied on full path.
+  # Default value is empty list,
+  # but default dirs are skipped independently of this option's value (see skip-dirs-use-default).
+  # "/" will be replaced by current OS file path separator to properly work on Windows.
+  skip-dirs:
+    # - staging
+linters:
+  enable:
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - cyclop
+    # - deadcode
+    # - depguard
+    - dogsled
+    - dupl
+    - durationcheck
+    - errcheck
+    - errname
+    # - errorlint
+    # - exhaustive
+    # - exhaustivestruct
+    - exportloopref
+    # - forbidigo
+    # - forcetypeassert
+    - funlen
+    # - gci
+    # - gochecknoglobals
+    # - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    # - godot
+    # - godox
+    # - goerr113
+    # - gofmt
+    - gofumpt
+    # - goheader
+    # - goimports
+    # - golint
+    # - gomnd
+    # - gomoddirectives
+    - gomodguard
+    # - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    # - ifshort
+    - importas
+    - ineffassign
+    - interfacer
+    # - ireturn
+    - lll
+    - makezero
+    - maligned
+    - misspell
+    - nakedret
+    - nestif
+    # - nilerr
+    - nilnil
+    # - nlreturn
+    - noctx
+    - nolintlint
+    # - paralleltest
+    - prealloc
+    - predeclared
+    - promlinter
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - structcheck
+    - stylecheck
+    # - tagliatelle
+    - tenv
+    # - testpackage
+    - thelper
+    - tparallel
+    - typecheck
+    - unconvert
+    - unparam
+    # - unused
+    - varcheck
+    # - varnamelen
+    # - wastedassign
+    - whitespace
+    # - wrapcheck
+    # - wsl
+  disable:
+    - deadcode
+    - unused
+    # - varcheck
+    # - errcheck
+issues:
+  exclude-rules:
+    - linters:
+        - govet
+      text: 'shadow: declaration of "err"'
+    - linters:
+        - staticcheck
+      # SA4006 - A value assigned to a variable is never read before being overwritten，禁用以允许 num := 1 这样的写法
+      # SA9003 - Empty body in an if or else branch，禁用以允许空的条件分支，以便确保逻辑完备
+      text: 'SA4006:|SA9003:'
+    - linters:
+        - typecheck
+      text: 'undeclared name'
+    - linters:
+        - revive
+      text: 'var-naming:'
+    - linters:
+        - stylecheck
+      text: 'ST1003'
+    - path: _test\.go
+      linters:
+        - gosec # security is not make sense in tests
+    - linters:
+        - gocritic
+      text: 'ifElseChain'
+    - linters:
+        - structcheck
+      text: 'is unused'
+linters-settings:
+  gofumpt:
+    # Select the Go version to target.
+    # Default: "1.15"
+    # Deprecated: use the global `run.go` instead.
+    lang-version: '1.20'
+    # Module path which contains the source code being formatted.
+    # Default: ""
+    module-path: go-template
+    # Choose whether to use the extra rules.
+    # Default: false
+    extra-rules: true
+  govet:
+    # Report about shadowed variables.
+    # Default: false
+    check-shadowing: true
+    enable-all: true
+    disable:
+      - fieldalignment
+  cyclop: # 代码检测项目名通常会对应到某个插件
+    # 最大的复杂度
+    max-complexity: 13
+  lll:
+    # Max line length, lines longer will be reported.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option.
+    # Default: 120.
+    line-length: 180
