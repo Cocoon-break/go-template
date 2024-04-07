@@ -43,6 +43,7 @@ func appStart(c *cli.Context) {
 	if err := config.DumpAndSetGlobal(conf); err != nil {
 		zlog.Error("config_dump", zlog.Any("err", err.Error()))
 	}
+	zlog.Info("app_running", zlog.Any("env", env.CompileInfo()))
 	startModules()
 	gracefulShutdown()
 	_ = zlog.Sync()
